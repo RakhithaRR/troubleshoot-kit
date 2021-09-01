@@ -14,6 +14,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Component
 @EnableAsync
@@ -29,6 +31,19 @@ public class DBTester implements InitializingBean {
     @Override
     @Async
     public void afterPropertiesSet() throws Exception {
+        int threads = testConfig.getThreadCount();
+        ExecutorService executorService = Executors.newFixedThreadPool(threads);
+
+        for (int i = 0; i < threads; i++) {
+            Runnable myRunnable = new MyRunnable(i);
+            executorService.execute(myRunnable);
+        }
+
+        executorService.shutdown();
+        log.info("Finished running all threads");
+    }
+
+    public void runDbTest() {
         Connection connection = null;
         long sumTimesGetConnection = 0;
         try {
@@ -86,6 +101,19 @@ public class DBTester implements InitializingBean {
             log.info("Average time to get connection (ms) : " + (sumTimesGetConnection / testConfig.getTotalIterations()));
         } catch (Exception e) {
             log.error(e.getMessage());
+        }
+    }
+
+    public class MyRunnable implements Runnable {
+        private int threadNo;
+        MyRunnable(int threadNo) {
+            this.threadNo = threadNo;
+        }
+
+        @Override
+        public void run() {
+            log.info("Started thread: " + threadNo);
+            runDbTest();
         }
     }
 }

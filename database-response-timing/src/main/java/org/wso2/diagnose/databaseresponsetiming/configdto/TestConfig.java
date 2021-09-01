@@ -11,6 +11,7 @@ public class TestConfig {
     private int sleepTime = 0;
     private boolean LogResultSet = false;
     private String query = "SELECT 1";
+    private int threadCount = 1;
 
     public int getIterationsPerConnection() {
         return iterationsPerConnection;
@@ -50,5 +51,13 @@ public class TestConfig {
 
     public void setLogResultSet(boolean logResultSet) {
         this.LogResultSet = logResultSet;
+    }
+
+    public int getThreadCount() {
+        return threadCount;
+    }
+
+    public void setThreadCount(int threadCount) {
+        this.threadCount = threadCount;
     }
 }

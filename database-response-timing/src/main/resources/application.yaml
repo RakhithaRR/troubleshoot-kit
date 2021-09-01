@@ -16,8 +16,9 @@ testconfig:
   totalIterations: 2
   iterationsPerConnection: 1
   sleepTime: 10000
-  query: "SELECT * FROM abc"
+  query: "SELECT 1"
   logResultSet: false
+  threadCount: 1
 
 #Logging configuration more information : https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html#logging.charset.console
 logging:
