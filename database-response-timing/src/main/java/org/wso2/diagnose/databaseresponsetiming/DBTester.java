@@ -16,6 +16,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @EnableAsync
@@ -46,6 +47,11 @@ public class DBTester implements InitializingBean {
                 executorService.execute(myRunnable);
             }
             executorService.shutdown();
+            try {
+                executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+            } catch (InterruptedException e) {
+                log.error(e.toString());
+            }
             log.info("Finished running all threads for round " + j);
             Thread.sleep(testConfig.getSleepTime());
             j++;
